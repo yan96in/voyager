@@ -4,7 +4,7 @@ import {FieldQuery, ValueQuery} from 'compassql/build/src/query/encoding';
 import {ExpandedType} from 'compassql/build/src/query/expandedtype';
 import {isWildcard, SHORT_WILDCARD, Wildcard, WildcardProperty} from 'compassql/build/src/wildcard';
 import {Axis} from 'vega-lite/build/src/axis';
-import {Channel, FieldDefOnlyChannels} from 'vega-lite/build/src/channel';
+import {Channel, NonspatialScaleChannel, SpatialScaleChannel} from 'vega-lite/build/src/channel';
 import {ValueDef} from 'vega-lite/build/src/fielddef';
 import {Legend} from 'vega-lite/build/src/legend';
 import {Mark as VLMark} from 'vega-lite/build/src/mark';
@@ -68,7 +68,16 @@ export interface ShelfAnyEncodingDef extends ShelfFieldDef {
 export type ShelfValueDef = ValueDef;
 
 export type SpecificEncoding = {
-  [P in FieldDefOnlyChannels]?: ShelfFieldDef
+  [P in SpatialScaleChannel]?: ShelfFieldDef
+} & {
+  [P in NonspatialScaleChannel]?: ShelfFieldDef | ShelfValueDef
+} & {
+  text?: ShelfFieldDef | ShelfValueDef,
+  // TODO: tooltip?: ShelfFieldDef | ShelfValueDef,
+  detail?: ShelfFieldDef, // TODO: ShelfFieldDef[]
+  order?: ShelfFieldDef,  // TODO: ShelfFieldDef[]
+  row?: ShelfFieldDef,
+  column?: ShelfFieldDef
 };
 
 export function fromEncodingQueries(encodings: EncodingQuery[]): {
