@@ -4,7 +4,7 @@ import {FieldQuery, ValueQuery} from 'compassql/build/src/query/encoding';
 import {ExpandedType} from 'compassql/build/src/query/expandedtype';
 import {isWildcard, SHORT_WILDCARD, Wildcard, WildcardProperty} from 'compassql/build/src/wildcard';
 import {Axis} from 'vega-lite/build/src/axis';
-import {Channel} from 'vega-lite/build/src/channel';
+import {Channel, FieldDefOnlyChannels} from 'vega-lite/build/src/channel';
 import {ValueDef} from 'vega-lite/build/src/fielddef';
 import {Legend} from 'vega-lite/build/src/legend';
 import {Mark as VLMark} from 'vega-lite/build/src/mark';
@@ -37,7 +37,7 @@ export function isWildcardChannelId(shelfId: ShelfId): shelfId is ShelfWildcardC
 export type ShelfMark = VLMark | SHORT_WILDCARD;
 
 
-export type ShelfEncodingDef = ShelfFieldDef | ValueDef<string>;
+export type ShelfEncodingDef = ShelfFieldDef | ShelfValueDef<string>;
 
 export interface ShelfFieldDef {
   field: WildcardProperty<string>;
@@ -65,10 +65,10 @@ export interface ShelfAnyEncodingDef extends ShelfFieldDef {
   channel: SHORT_WILDCARD;
 }
 
+export type ShelfValueDef = ValueDef;
+
 export type SpecificEncoding = {
-  // TODO: ShelfFieldDef | ValueDef
-  // (Just use ValueDef, no need for special ShelfValueDef)
-  [P in Channel]?: ShelfFieldDef;
+  [P in FieldDefOnlyChannels]?: ShelfFieldDef
 };
 
 export function fromEncodingQueries(encodings: EncodingQuery[]): {
@@ -99,14 +99,15 @@ export function fromEncodingQuery(encQ: EncodingQuery): ShelfFieldDef {
   }
 }
 
-export function fromValueQuery(encQ: ValueQuery): ValueDef<any> {
+export function fromValueQuery(encQ: ValueQuery): ShelfValueDef<any> {
   if (isWildcard(encQ.value)) {
     throw Error('Voyager does not support wildcard value');
   }
+  // TODO
   return encQ;
 }
 
-export function toEncodingQuery(encDef: ShelfFieldDef | ValueDef<any>, channel: Channel | SHORT_WILDCARD): EncodingQuery {
+export function toEncodingQuery(encDef: ShelfFieldDef | ShelfValueDef<any>, channel: Channel | SHORT_WILDCARD): EncodingQuery {
   // TODO check type and do to ValueQuery
   return toFieldQuery(encDef, channel);
 }
