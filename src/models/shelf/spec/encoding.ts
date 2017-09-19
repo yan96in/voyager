@@ -97,7 +97,6 @@ export function fromEncodingQueries(encodings: EncodingQuery[]): {
   }, {encoding: {}, anyEncodings: []});
 }
 
-
 export function fromEncodingQuery(encQ: EncodingQuery): ShelfFieldDef | ShelfValueDef {
   if (isFieldQuery(encQ)) {
     return fromFieldQuery(encQ);
@@ -106,30 +105,6 @@ export function fromEncodingQuery(encQ: EncodingQuery): ShelfFieldDef | ShelfVal
   } else {
     return fromValueQuery(encQ);
   }
-}
-
-export function fromValueQuery(encQ: ValueQuery): ShelfValueDef {
-  if (isWildcard(encQ.value)) {
-    throw Error('Voyager does not support wildcard value');
-  }
-  return {
-    value: encQ.value ? encQ.value : undefined // TODO: read vega-lite defaults when value is undefined
-  };
-}
-
-export function toEncodingQuery(encDef: ShelfFieldDef | ShelfValueDef, channel: Channel | SHORT_WILDCARD): EncodingQuery {
-  // TODO check type and do to ValueQuery
-  return toFieldQuery(encDef, channel);
-}
-
-export function toFieldQuery(fieldDef: ShelfFieldDef, channel: Channel | SHORT_WILDCARD): FieldQuery {
-  const {fn, ...fieldDefWithoutFn} = fieldDef;
-
-  return {
-    channel,
-    ...toFieldQueryFunctionMixins(fn),
-    ...fieldDefWithoutFn
-  };
 }
 
 export function fromFieldQuery(fieldQ: FieldQuery): ShelfFieldDef {
@@ -178,4 +153,33 @@ export function fromFieldQueryNestedProp<P extends 'scale' | 'axis' | 'legend'>(
   }
   // We already catch all the unsupported types above so here we can just cast
   return propQ as ShelfFieldDef[P];
+}
+
+export function fromValueQuery(encQ: ValueQuery): ShelfValueDef {
+  if (isWildcard(encQ.value)) {
+    throw Error('Voyager does not support wildcard value');
+  }
+  return {
+    value: encQ.value ? encQ.value : undefined // TODO: read vega-lite defaults when value is undefined
+  };
+}
+
+
+export function toEncodingQuery(encDef: ShelfFieldDef | ShelfValueDef, channel: Channel | SHORT_WILDCARD): EncodingQuery {
+  // TODO check type and do to ValueQuery
+  return toFieldQuery(encDef, channel);
+}
+
+export function toFieldQuery(fieldDef: ShelfFieldDef, channel: Channel | SHORT_WILDCARD): FieldQuery {
+  const {fn, ...fieldDefWithoutFn} = fieldDef;
+
+  return {
+    channel,
+    ...toFieldQueryFunctionMixins(fn),
+    ...fieldDefWithoutFn
+  };
+}
+
+export function toValueQuery(valueDef: ShelfValueDef): ValueQuery {
+  return valueDef;
 }
