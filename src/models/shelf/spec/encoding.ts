@@ -164,10 +164,22 @@ export function fromValueQuery(encQ: ValueQuery): ShelfValueDef {
   };
 }
 
+export function isShelfFieldDef(encDef: any): encDef is ShelfFieldDef {
+  return encDef.field ? true : false;
+}
 
-export function toEncodingQuery(encDef: ShelfFieldDef | ShelfValueDef, channel: Channel | SHORT_WILDCARD): EncodingQuery {
-  // TODO check type and do to ValueQuery
-  return toFieldQuery(encDef, channel);
+export function isShelfValueDef(encDef: any): encDef is ShelfValueDef {
+  return encDef.value ? true : false;
+}
+
+export function toEncodingQuery(
+  encDef: ShelfFieldDef | ShelfValueDef, channel: Channel | SHORT_WILDCARD
+): EncodingQuery {
+  if (isShelfFieldDef(encDef)) {
+    return toFieldQuery(encDef, channel);
+  } else {
+    return toValueQuery(encDef, channel);
+  }
 }
 
 export function toFieldQuery(fieldDef: ShelfFieldDef, channel: Channel | SHORT_WILDCARD): FieldQuery {
