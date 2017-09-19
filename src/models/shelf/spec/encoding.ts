@@ -112,9 +112,8 @@ export function fromValueQuery(encQ: ValueQuery): ShelfValueDef {
   if (isWildcard(encQ.value)) {
     throw Error('Voyager does not support wildcard value');
   }
-  // TODO: return value depending on channel
   return {
-    value: encQ.value
+    value: encQ.value // TODO: when value is undefined
   };
 }
 
