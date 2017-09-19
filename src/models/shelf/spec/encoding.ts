@@ -37,7 +37,7 @@ export function isWildcardChannelId(shelfId: ShelfId): shelfId is ShelfWildcardC
 export type ShelfMark = VLMark | SHORT_WILDCARD;
 
 
-export type ShelfEncodingDef = ShelfFieldDef | ShelfValueDef<string>;
+export type ShelfEncodingDef = ShelfFieldDef | ShelfValueDef;
 
 export interface ShelfFieldDef {
   field: WildcardProperty<string>;
@@ -98,7 +98,7 @@ export function fromEncodingQueries(encodings: EncodingQuery[]): {
 }
 
 
-export function fromEncodingQuery(encQ: EncodingQuery): ShelfFieldDef {
+export function fromEncodingQuery(encQ: EncodingQuery): ShelfFieldDef | ShelfValueDef {
   if (isFieldQuery(encQ)) {
     return fromFieldQuery(encQ);
   } else if (isAutoCountQuery(encQ)) {
@@ -108,15 +108,17 @@ export function fromEncodingQuery(encQ: EncodingQuery): ShelfFieldDef {
   }
 }
 
-export function fromValueQuery(encQ: ValueQuery): ShelfValueDef<any> {
+export function fromValueQuery(encQ: ValueQuery): ShelfValueDef {
   if (isWildcard(encQ.value)) {
     throw Error('Voyager does not support wildcard value');
   }
-  // TODO
-  return encQ;
+  // TODO: return value depending on channel
+  return {
+    value: encQ.value
+  };
 }
 
-export function toEncodingQuery(encDef: ShelfFieldDef | ShelfValueDef<any>, channel: Channel | SHORT_WILDCARD): EncodingQuery {
+export function toEncodingQuery(encDef: ShelfFieldDef | ShelfValueDef, channel: Channel | SHORT_WILDCARD): EncodingQuery {
   // TODO check type and do to ValueQuery
   return toFieldQuery(encDef, channel);
 }
