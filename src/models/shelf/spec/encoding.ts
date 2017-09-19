@@ -180,6 +180,9 @@ export function toFieldQuery(fieldDef: ShelfFieldDef, channel: Channel | SHORT_W
   };
 }
 
-export function toValueQuery(valueDef: ShelfValueDef): ValueQuery {
-  return valueDef;
+export function toValueQuery(valueDef: ShelfValueDef, channel: Channel | SHORT_WILDCARD): ValueQuery {
+  return {
+    channel,
+    value: valueDef.value ? valueDef.value : undefined
+  };
 }
