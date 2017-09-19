@@ -113,7 +113,7 @@ export function fromValueQuery(encQ: ValueQuery): ShelfValueDef {
     throw Error('Voyager does not support wildcard value');
   }
   return {
-    value: encQ.value // TODO: when value is undefined
+    value: encQ.value ? encQ.value : undefined // TODO: read vega-lite defaults when value is undefined
   };
 }
 
