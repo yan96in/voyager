@@ -85,16 +85,18 @@ class EncodingShelfBase extends React.PureComponent<
             }
 
             {this.state.customizerIsOpened &&
-              <FieldCustomizer
-                shelfId={id}
-                fieldDef={fieldDef}
-                handleAction={handleAction}
-              /> ||
-              <ValueCustomizer
-                shelfId={id}
-                valueDef={valueDef}
-                handleAction={handleAction}
-               />
+              <div>
+                <FieldCustomizer
+                  shelfId={id}
+                  fieldDef={fieldDef}
+                  handleAction={handleAction}
+                />
+                <ValueCustomizer
+                  shelfId={id}
+                  valueDef={valueDef}
+                  handleAction={handleAction}
+                />
+              </div>
             }
           </TetherComponent>
         </div>
