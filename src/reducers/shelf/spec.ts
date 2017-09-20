@@ -172,7 +172,19 @@ export function shelfSpecReducer(
     }
 
     case SPEC_VALUE_CHANGE: {
-      return {...shelfSpec}; // TODO
+      const {shelfId, valueDef} = action.payload;
+
+      if (isWildcardChannelId(shelfId)) {
+        throw Error('constant value cannot be assigned to a wildcard channel');
+      } else {
+        return {
+          ...shelfSpec,
+          encoding: {
+            ...shelfSpec.encoding,
+            [shelfId.channel]: {value: valueDef.value}
+          }
+        };
+      }
     }
   }
   return shelfSpec;
