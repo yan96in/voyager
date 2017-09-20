@@ -755,7 +755,7 @@ describe('reducers/shelf/spec', () => {
           type: SPEC_VALUE_CHANGE,
           payload: {
             shelfId: {channel: 'color'},
-            value: 'blue'
+            valueDef: {value: 'blue'}
           }
         }
       );

@@ -1,6 +1,6 @@
 
 import {FacetedCompositeUnitSpec} from 'vega-lite/build/src/spec';
-import {ShelfFieldDef, ShelfFunction, ShelfId, ShelfMark} from '../../models';
+import {ShelfFieldDef, ShelfFunction, ShelfId, ShelfMark, ShelfValueDef} from '../../models';
 import {Action} from '../index';
 import {PlainReduxAction, ReduxAction} from '../redux-action';
 
@@ -109,7 +109,8 @@ export type SpecFunctionRemoveWildcard = ReduxAction<typeof SPEC_FUNCTION_REMOVE
 
 export const SPEC_VALUE_CHANGE = 'SPEC_VALUE_CHANGE';
 export type SpecValueChange = ReduxAction<typeof SPEC_VALUE_CHANGE, {
-  shelfId: ShelfId
+  shelfId: ShelfId,
+  valueDef: ShelfValueDef
 }>;
 
 export const SPEC_LOAD = 'SPEC_LOAD';
