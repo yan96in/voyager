@@ -27,16 +27,6 @@ export interface PersistentState {
   shelfPreview: ShelfPreview;
 }
 
-// export interface UndoableStateBaseWithoutDataset {
-//   customWildcardFields: CustomWildcardField[];
-//   shelf: Shelf;
-//   result: ResultIndex;
-// }
-
-// export interface UndoableStateBase extends UndoableStateBaseWithoutDataset {
-//   dataset: Dataset;
-// }
-
 export interface SingleViewTabStateWithoutDataset {
   customWildcardFields: CustomWildcardField[];
   shelf: Shelf;
