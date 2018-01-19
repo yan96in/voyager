@@ -11,7 +11,7 @@ import {ShelfFilter} from '../models/shelf/filter';
 import {getDefaultGroupBy, Shelf, ShelfGroupBy, toQuery} from '../models/shelf/index';
 import {hasWildcards, ShelfUnitSpec} from '../models/shelf/spec';
 
-export const selectShelf = (state: State): Shelf => state.undoable.present.shelf;
+export const selectShelf = (state: State): Shelf => state.undoable.present.tabs[0].shelf;
 
 export const selectShelfGroupBy = createSelector(selectShelf,
   (shelf: Shelf): ShelfGroupBy => shelf.groupBy

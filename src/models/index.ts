@@ -27,14 +27,28 @@ export interface PersistentState {
   shelfPreview: ShelfPreview;
 }
 
-export interface UndoableStateBaseWithoutDataset {
+// export interface UndoableStateBaseWithoutDataset {
+//   customWildcardFields: CustomWildcardField[];
+//   shelf: Shelf;
+//   result: ResultIndex;
+// }
+
+// export interface UndoableStateBase extends UndoableStateBaseWithoutDataset {
+//   dataset: Dataset;
+// }
+
+export interface SingleViewTabStateWithoutDataset {
   customWildcardFields: CustomWildcardField[];
   shelf: Shelf;
   result: ResultIndex;
 }
 
-export interface UndoableStateBase extends UndoableStateBaseWithoutDataset {
+export interface SingleViewTabState extends SingleViewTabStateWithoutDataset {
   dataset: Dataset;
+}
+
+export interface UndoableStateBase {
+  tabs: SingleViewTabState[];
 }
 
 /**
@@ -45,11 +59,15 @@ export interface State {
   undoable: StateWithHistory<UndoableStateBase>;
 };
 
-export const DEFAULT_UNDOABLE_STATE_BASE: UndoableStateBase = {
+export const DEFAULT_SINGLE_VIEW_TAB_STATE = {
   customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
   dataset: DEFAULT_DATASET,
   shelf: DEFAULT_SHELF,
   result: DEFAULT_RESULT_INDEX
+};
+
+export const DEFAULT_UNDOABLE_STATE_BASE: UndoableStateBase = {
+  tabs: [DEFAULT_SINGLE_VIEW_TAB_STATE]
 };
 
 export const DEFAULT_UNDOABLE_STATE: StateWithHistory<UndoableStateBase> = {
@@ -75,54 +93,71 @@ export const DEFAULT_STATE: State = {
   undoable: DEFAULT_UNDOABLE_STATE
 };
 
-
-export interface SerializableState extends PersistentState, UndoableStateBaseWithoutDataset {
+export interface SerializableSingleViewTabState extends SingleViewTabStateWithoutDataset {
   dataset: DatasetWithoutSchema;
   tableschema: TableSchema<FieldSchema>;
 }
 
+export interface SerializableState extends PersistentState {
+  tabs: SerializableSingleViewTabState[];
+}
+
 export function toSerializable(state: Readonly<State>): SerializableState {
-  const {dataset, ...undoableStateBaseWithoutDataset} = state.undoable.present;
+  return {
+    ...state.persistent,
+    tabs: [toSerializableTab(state.undoable.present.tabs[0])]
+  };
+}
+
+export function toSerializableTab(tabState: Readonly<SingleViewTabState>): SerializableSingleViewTabState {
+  const {dataset, ...singleViewTabStateWithoutDataset} = tabState;
   const {schema, ...datasetWithoutSchema} = dataset;
 
   return {
-    ...state.persistent,
-    ...undoableStateBaseWithoutDataset,
+    ...singleViewTabStateWithoutDataset,
     dataset: datasetWithoutSchema,
-    tableschema: schema.tableSchema(),
+    tableschema: schema.tableSchema()
   };
 }
 
 export function fromSerializable(serializable: SerializableState): Readonly<State> {
   const {
-    // Data
-    dataset: datasetWithoutSchema,
-    tableschema,
     // Persistent
     bookmark,
     config,
     log,
     relatedViews,
     shelfPreview,
-    // Then the rest should be UndoableStateBaseWithoutDataset
-    ...undoableStateBaseWithoutDataset
+    // Tabs
+    tabs
   } = serializable;
 
   const persistent: PersistentState = {bookmark, config, relatedViews, shelfPreview, log};
-
-  const undoableBase: UndoableStateBase = {
-    ...undoableStateBaseWithoutDataset,
-    dataset: {
-      ...datasetWithoutSchema,
-      schema : new Schema(serializable.tableschema)
-    }
-  };
 
   return {
     persistent,
     undoable: {
       ...DEFAULT_UNDOABLE_STATE,
-      present: undoableBase
+      present: {
+        tabs: [fromSerializableTab(tabs[0])]
+      }
+    }
+  };
+}
+
+export function fromSerializableTab(serializableTabState: SerializableSingleViewTabState)
+: Readonly<SingleViewTabState> {
+  const {
+    dataset: datasetWithoutSchema,
+    tableschema,
+    ...singleViewTabStateWithoutDataset
+  } = serializableTabState;
+
+  return {
+    ...singleViewTabStateWithoutDataset,
+    dataset: {
+      ...datasetWithoutSchema,
+      schema : new Schema(serializableTabState.tableschema)
     }
   };
 }

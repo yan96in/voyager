@@ -2,7 +2,7 @@
 import {DEFAULT_BOOKMARK} from '../models/bookmark';
 import {DEFAULT_VOYAGER_CONFIG} from '../models/config';
 import {DEFAULT_DATASET} from '../models/dataset';
-import {DEFAULT_STATE, State} from '../models/index';
+import {DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_STATE, State} from '../models/index';
 import {DEFAULT_LOG} from '../models/log';
 import {DEFAULT_SHELF_PREVIEW} from '../models/shelf-preview';
 import {DEFAULT_SHELF} from '../models/shelf/index';
@@ -40,17 +40,19 @@ describe('selectors/index', () => {
         undoable: {
           ...DEFAULT_STATE.undoable,
           present: {
-            ...DEFAULT_STATE.undoable.present,
-            dataset: {
-              ...DEFAULT_DATASET,
-              data: {
-                values: [{a: 1}, {a: 3}]
+            tabs: [{
+              ...DEFAULT_SINGLE_VIEW_TAB_STATE,
+              dataset: {
+                ...DEFAULT_DATASET,
+                data: {
+                  values: [{a: 1}, {a: 3}]
+                }
+              },
+              shelf: {
+                ...DEFAULT_SHELF,
+                filters: [{field: 'a', oneOf: [3]}]
               }
-            },
-            shelf: {
-              ...DEFAULT_SHELF,
-              filters: [{field: 'a', oneOf: [3]}]
-            }
+            }]
           },
         }
       };
@@ -68,11 +70,13 @@ describe('selectors/index', () => {
         undoable: {
           ...DEFAULT_STATE.undoable,
           present: {
-            ...DEFAULT_STATE.undoable.present,
-            dataset: {
-              ...DEFAULT_DATASET,
-              data
-            }
+            tabs: [{
+              ...DEFAULT_SINGLE_VIEW_TAB_STATE,
+              dataset: {
+                ...DEFAULT_DATASET,
+                data
+              }
+            }]
           },
         }
       };

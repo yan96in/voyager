@@ -78,9 +78,9 @@ describe('lib-voyager', () => {
           const state = voyagerInst.getApplicationState();
 
           expect(state).toHaveProperty('config');
-          expect(state).toHaveProperty('dataset');
-          expect(state).toHaveProperty('result');
-          expect(state).toHaveProperty('shelf');
+          expect(state.tabs[0]).toHaveProperty('dataset');
+          expect(state.tabs[0]).toHaveProperty('result');
+          expect(state.tabs[0]).toHaveProperty('shelf');
 
           const originalConfigOption = state.config.showDataSourceSelector;
           state.config.showDataSourceSelector = !state.config.showDataSourceSelector;
@@ -92,9 +92,9 @@ describe('lib-voyager', () => {
               const newState = voyagerInst.getApplicationState();
 
               expect(newState).toHaveProperty('config');
-              expect(newState).toHaveProperty('dataset');
-              expect(newState).toHaveProperty('result');
-              expect(newState).toHaveProperty('shelf');
+              expect(newState.tabs[0]).toHaveProperty('dataset');
+              expect(newState.tabs[0]).toHaveProperty('result');
+              expect(newState.tabs[0]).toHaveProperty('shelf');
 
               expect(newState.config.showDataSourceSelector).toEqual(!originalConfigOption);
 
@@ -122,9 +122,9 @@ describe('lib-voyager', () => {
 
           const handleStateChange = (state: SerializableState) => {
             expect(state.config).toBeDefined();
-            expect(state.dataset).toBeDefined();
-            expect(state.result).toBeDefined();
-            expect(state.shelf).toBeDefined();
+            expect(state.tabs[0].dataset).toBeDefined();
+            expect(state.tabs[0].result).toBeDefined();
+            expect(state.tabs[0].shelf).toBeDefined();
 
             expect(state.config.showDataSourceSelector).toEqual(!originalConfigOption);
 

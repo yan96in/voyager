@@ -5,7 +5,7 @@ import {DEFAULT_STATE} from '../models/index';
 import {selectData, selectDataset, selectPresetWildcardFields, selectSchema, selectSchemaFieldDefs} from './dataset';
 
 const stateWithSchema = {...DEFAULT_STATE};
-stateWithSchema.undoable.present.dataset.schema = new Schema(
+stateWithSchema.undoable.present.tabs[0].dataset.schema = new Schema(
   {
     fields: [
       {
@@ -41,7 +41,7 @@ describe('selectors/dataset', () => {
 
   describe('selectSchema', () => {
     it('selecting schema should return the default schema', () => {
-      expect(selectSchema(DEFAULT_STATE)).toBe(DEFAULT_STATE.undoable.present.dataset.schema);
+      expect(selectSchema(DEFAULT_STATE)).toBe(DEFAULT_STATE.undoable.present.tabs[0].dataset.schema);
     });
   });
 

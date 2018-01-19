@@ -5,7 +5,7 @@ import {SpecQuery} from 'compassql/build/src/query/spec';
 import {Schema} from 'compassql/build/src/schema';
 import {Data} from 'vega-lite/build/src/data';
 import {DEFAULT_DATASET} from '../models/dataset';
-import {DEFAULT_PERSISTENT_STATE, DEFAULT_STATE, State} from '../models/index';
+import {DEFAULT_PERSISTENT_STATE, DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_STATE, State} from '../models/index';
 import {fromSpecQueryModelGroup} from '../models/result';
 import {DEFAULT_RESULT, DEFAULT_RESULT_INDEX} from '../models/result';
 import {DEFAULT_SHELF} from '../models/shelf/index';
@@ -47,22 +47,24 @@ const stateSpecific: State = {
   undoable: {
     ...DEFAULT_STATE.undoable,
     present: {
-      ...DEFAULT_STATE.undoable.present,
-      dataset: {
-        ...DEFAULT_DATASET,
-        data
-      },
-      shelf: {
-        ...DEFAULT_SHELF,
-        spec
-      },
-      result: {
-        ...DEFAULT_RESULT_INDEX,
-        main: {
-          ...DEFAULT_RESULT,
-          plots
+      tabs: [{
+        ...DEFAULT_SINGLE_VIEW_TAB_STATE,
+        dataset: {
+          ...DEFAULT_DATASET,
+          data
+        },
+        shelf: {
+          ...DEFAULT_SHELF,
+          spec
+        },
+        result: {
+          ...DEFAULT_RESULT_INDEX,
+          main: {
+            ...DEFAULT_RESULT,
+            plots
+          }
         }
-      }
+      }]
     }
   }
 };

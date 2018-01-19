@@ -3,7 +3,7 @@ import {toSet} from 'vega-util';
 
 import {Action, REDO, UNDO} from '../actions';
 import {HISTORY_LIMIT} from '../constants';
-import {DEFAULT_STATE} from '../models';
+import {DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_STATE, DEFAULT_UNDOABLE_STATE_BASE} from '../models';
 
 import {SET_CONFIG} from '../actions/config';
 
@@ -63,8 +63,8 @@ import {SHELF_AUTO_ADD_COUNT_CHANGE, SHELF_GROUP_BY_CHANGE} from '../actions/she
 import {SPEC_FIELD_NESTED_PROP_CHANGE, SPEC_FIELD_PROP_CHANGE} from '../actions/shelf/spec';
 import {
   DEFAULT_PERSISTENT_STATE,
-  DEFAULT_UNDOABLE_STATE_BASE,
   PersistentState,
+  SingleViewTabState,
   State,
   UndoableStateBase
 } from '../models/index';
@@ -233,24 +233,31 @@ function groupAction(action: Action, currentState: UndoableStateBase,
 };
 
 /**
- * Whether to reset a particular property of the undoable state during RESET action
+ * Whether to reset a particular property of the single view tab state during RESET action
  */
-const undoableStateToReset: ResetIndex<UndoableStateBase> = {
+const singleViewTabStateToReset: ResetIndex<SingleViewTabState> = {
   customWildcardFields: true,
   dataset: true,
   shelf: true,
   result: true
 };
 
-const combinedUndoableReducer = combineReducers<UndoableStateBase>({
+const combineSingleViewTabReducer = combineReducers<SingleViewTabState>({
   customWildcardFields: customWildcardFieldReducer,
   dataset: datasetReducer,
   shelf: shelfReducer,
   result: resultIndexReducer
 });
 
-const undoableReducerBase = makeResetReducer(
-  (state: Readonly<UndoableStateBase> = DEFAULT_UNDOABLE_STATE_BASE, action: Action): UndoableStateBase => {
+const undoableReducerBase = (state: Readonly<UndoableStateBase> = DEFAULT_UNDOABLE_STATE_BASE, action: Action)
+: UndoableStateBase => {
+  return {
+    tabs: [singleViewTabReducerBase(state.tabs[0], action)]
+  };
+};
+
+const singleViewTabReducerBase = makeResetReducer(
+  (state: Readonly<SingleViewTabState> = DEFAULT_SINGLE_VIEW_TAB_STATE, action: Action): SingleViewTabState => {
     switch (action.type) {
       // SPEC_FIELD_AUTO_ADD is a special case that requires schema as a parameter
       case SPEC_FIELD_AUTO_ADD:
@@ -263,12 +270,11 @@ const undoableReducerBase = makeResetReducer(
         };
     }
 
-    return combinedUndoableReducer(state, action);
+    return combineSingleViewTabReducer(state, action);
   },
-  undoableStateToReset,
-  DEFAULT_UNDOABLE_STATE_BASE
+  singleViewTabStateToReset,
+  DEFAULT_SINGLE_VIEW_TAB_STATE
 );
-
 
 const undoableReducer = undoable<UndoableStateBase>(undoableReducerBase, {
   limit: HISTORY_LIMIT,
