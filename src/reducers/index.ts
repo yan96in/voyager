@@ -251,8 +251,10 @@ const combineSingleViewTabReducer = combineReducers<SingleViewTabState>({
 
 const undoableReducerBase = (state: Readonly<UndoableStateBase> = DEFAULT_UNDOABLE_STATE_BASE, action: Action)
 : UndoableStateBase => {
+  const activeTab = state.activeTab;
   return {
-    tabs: [singleViewTabReducerBase(state.tabs[0], action)]
+    activeTab: activeTab,
+    tabs: [singleViewTabReducerBase(state.tabs[activeTab], action)]
   };
 };
 

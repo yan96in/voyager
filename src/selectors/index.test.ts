@@ -40,6 +40,7 @@ describe('selectors/index', () => {
         undoable: {
           ...DEFAULT_STATE.undoable,
           present: {
+            activeTab: 0,
             tabs: [{
               ...DEFAULT_SINGLE_VIEW_TAB_STATE,
               dataset: {
@@ -70,6 +71,7 @@ describe('selectors/index', () => {
         undoable: {
           ...DEFAULT_STATE.undoable,
           present: {
+            activeTab: 0,
             tabs: [{
               ...DEFAULT_SINGLE_VIEW_TAB_STATE,
               dataset: {

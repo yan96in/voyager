@@ -28,7 +28,8 @@ export const selectShelfPreview = (state: State): ShelfPreview => state.persiste
 export const selectLog = (state: State): Log => state.persistent.log;
 
 export const selectCustomWildcardFields = (state: State): CustomWildcardField[] => {
-  return state.undoable.present.tabs[0].customWildcardFields;
+  const activeTab = state.undoable.present.activeTab;
+  return state.undoable.present.tabs[activeTab].customWildcardFields;
 };
 
 export const selectFilteredData = createSelector(

@@ -16,7 +16,10 @@ import {selectIsQueryEmpty, selectIsQuerySpecific} from './shelf';
 export const selectResult: {
   [k in ResultType]?: Selector<State, Result>
 } = RESULT_TYPES.reduce((selectors, resultType) => {
-  selectors[resultType] = (state: State) => state.undoable.present.tabs[0].result[resultType];
+  selectors[resultType] = (state: State) => {
+    const activeTab = state.undoable.present.activeTab;
+    return state.undoable.present.tabs[activeTab].result[resultType];
+  };
   return selectors;
 }, {});
 

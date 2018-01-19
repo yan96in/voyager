@@ -15,6 +15,7 @@ describe('selectors/shelf', () => {
         undoable: {
           ...DEFAULT_STATE.undoable,
           present: {
+            activeTab: 0,
             tabs: [{
               ...DEFAULT_SINGLE_VIEW_TAB_STATE,
               dataset: {

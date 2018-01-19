@@ -38,6 +38,7 @@ export interface SingleViewTabState extends SingleViewTabStateWithoutDataset {
 }
 
 export interface UndoableStateBase {
+  activeTab: number;
   tabs: SingleViewTabState[];
 }
 
@@ -57,6 +58,7 @@ export const DEFAULT_SINGLE_VIEW_TAB_STATE = {
 };
 
 export const DEFAULT_UNDOABLE_STATE_BASE: UndoableStateBase = {
+  activeTab: 0,
   tabs: [DEFAULT_SINGLE_VIEW_TAB_STATE]
 };
 
@@ -89,13 +91,16 @@ export interface SerializableSingleViewTabState extends SingleViewTabStateWithou
 }
 
 export interface SerializableState extends PersistentState {
+  activeTab: number;
   tabs: SerializableSingleViewTabState[];
 }
 
 export function toSerializable(state: Readonly<State>): SerializableState {
+  const activeTab = state.undoable.present.activeTab;
   return {
     ...state.persistent,
-    tabs: [toSerializableTab(state.undoable.present.tabs[0])]
+    activeTab: activeTab,
+    tabs: [toSerializableTab(state.undoable.present.tabs[activeTab])]
   };
 }
 
@@ -119,6 +124,7 @@ export function fromSerializable(serializable: SerializableState): Readonly<Stat
     relatedViews,
     shelfPreview,
     // Tabs
+    activeTab,
     tabs
   } = serializable;
 
@@ -129,7 +135,8 @@ export function fromSerializable(serializable: SerializableState): Readonly<Stat
     undoable: {
       ...DEFAULT_UNDOABLE_STATE,
       present: {
-        tabs: [fromSerializableTab(tabs[0])]
+        activeTab: activeTab,
+        tabs: [fromSerializableTab(tabs[activeTab])]
       }
     }
   };

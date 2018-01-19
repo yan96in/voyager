@@ -11,9 +11,18 @@ import {InlineData} from 'vega-lite/build/src/data';
 import {ShelfFieldDef, State} from '../models';
 import {Dataset} from '../models/dataset';
 
-export const selectData = (state: State): InlineData => state.undoable.present.tabs[0].dataset.data;
-export const selectDataset = (state: State): Dataset => state.undoable.present.tabs[0].dataset;
-export const selectSchema = (state: State): Schema => state.undoable.present.tabs[0].dataset.schema;
+export const selectData = (state: State): InlineData => {
+  const activeTab = state.undoable.present.activeTab;
+  return state.undoable.present.tabs[activeTab].dataset.data;
+};
+export const selectDataset = (state: State): Dataset => {
+  const activeTab = state.undoable.present.activeTab;
+  return state.undoable.present.tabs[activeTab].dataset;
+};
+export const selectSchema = (state: State): Schema => {
+  const activeTab = state.undoable.present.activeTab;
+  return state.undoable.present.tabs[activeTab].dataset.schema;
+};
 
 
 const ALL_PRESET_WILDCARD_FIELDS: ShelfFieldDef[] = [
