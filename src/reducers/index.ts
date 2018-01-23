@@ -254,7 +254,9 @@ const undoableReducerBase = (state: Readonly<UndoableStateBase> = DEFAULT_UNDOAB
   const activeTab = state.activeTab;
   return {
     activeTab: activeTab,
-    tabs: [singleViewTabReducerBase(state.tabs[activeTab], action)]
+    tabs: state.tabs.map((singleViewTabState: SingleViewTabState) => {
+      return singleViewTabReducerBase(singleViewTabState, action);
+    })
   };
 };
 
