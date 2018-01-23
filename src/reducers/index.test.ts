@@ -47,28 +47,31 @@ describe('reducers/index', () => {
           ...DEFAULT_UNDOABLE_STATE,
           present: {
             ...DEFAULT_UNDOABLE_STATE_BASE,
-            dataset: {
-              isLoading: false,
-              name: 'Mock',
-              schema: null,
-              data: null
-            },
-            shelf: {
-              ...DEFAULT_SHELF,
-              spec: {
-                mark: 'point',
-                ...DEFAULT_SHELF_UNIT_SPEC
-              },
-            },
-            result: {
-              ...DEFAULT_RESULT_INDEX,
-              main: {
+            tabs: [{
+              dataset: {
                 isLoading: false,
-                plots: [], // mock
-                query: null,
-                limit: 20
+                name: 'Mock',
+                schema: null,
+                data: null
+              },
+              customWildcardFields: [{fields: ['test']}],
+              shelf: {
+                ...DEFAULT_SHELF,
+                spec: {
+                  mark: 'point',
+                  ...DEFAULT_SHELF_UNIT_SPEC
+                },
+              },
+              result: {
+                ...DEFAULT_RESULT_INDEX,
+                main: {
+                  isLoading: false,
+                  plots: [], // mock
+                  query: null,
+                  limit: 20
+                }
               }
-            }
+            }]
           }
         }
       };
