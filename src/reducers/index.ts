@@ -49,7 +49,10 @@ import {
   SPEC_FUNCTION_ENABLE_WILDCARD,
   SPEC_FUNCTION_REMOVE_WILDCARD,
   SPEC_LOAD,
-  SPEC_MARK_CHANGE_TYPE
+  SPEC_MARK_CHANGE_TYPE,
+  TAB_ADD,
+  TAB_REMOVE,
+  TAB_SWITCH
 } from '../actions';
 
 import {ActionType} from '../actions';
@@ -80,6 +83,7 @@ import {shelfReducer} from './shelf';
 import {shelfPreviewReducer} from './shelf-preview';
 import {shelfSpecFieldAutoAddReducer} from './shelf/spec';
 import {stateReducer} from './state';
+import {modifyItemInArray} from './util';
 
 /**
  * Whether to reset a particular property of the persistent state during RESET action
@@ -199,7 +203,12 @@ export const USER_ACTIONS: ActionType[] = [
   SPEC_FUNCTION_DISABLE_WILDCARD,
   SPEC_FUNCTION_ENABLE_WILDCARD,
   SPEC_FUNCTION_REMOVE_WILDCARD,
-  SPEC_LOAD
+  SPEC_LOAD,
+
+  // Tab Actions
+  TAB_ADD,
+  TAB_REMOVE,
+  TAB_SWITCH
 ];
 
 
@@ -249,18 +258,90 @@ const combineSingleViewTabReducer = combineReducers<SingleViewTabState>({
   result: resultIndexReducer
 });
 
-const undoableReducerBase = (state: Readonly<UndoableStateBase> = DEFAULT_UNDOABLE_STATE_BASE, action: Action)
-: UndoableStateBase => {
-  const activeTab = state.activeTab;
-  return {
-    activeTab: activeTab,
-    tabs: state.tabs.map((singleViewTabState: SingleViewTabState) => {
-      return singleViewTabReducerBase(singleViewTabState, action);
-    })
-  };
+import {CustomWildcardAction, DatasetAction, ResultAction, ShelfAction} from '../actions';
+import {RESULT_ACTION_TYPE_INDEX} from '../actions/result';
+import {SPEC_ACTION_TYPE_INDEX} from '../actions/shelf/spec';
+
+// TODO: Remove CustomWildcardAction, DatasetAction from this type
+export type SingleViewTabAction = (
+  CustomWildcardAction |
+  DatasetAction |
+  ResultAction |
+  ShelfAction
+);
+
+export type SingleViewTabActionType = SingleViewTabAction['type'];
+
+export const SINGLE_VIEW_TAB_ACTION_TYPE_INDEX: {[k in SingleViewTabActionType]: 1} = {
+  CUSTOM_WILDCARD_ADD: 1,
+  CUSTOM_WILDCARD_ADD_FIELD: 1,
+  CUSTOM_WILDCARD_MODIFY_DESCRIPTION: 1,
+  CUSTOM_WILDCARD_REMOVE: 1,
+  CUSTOM_WILDCARD_REMOVE_FIELD: 1,
+
+  DATASET_SCHEMA_CHANGE_FIELD_TYPE: 1,
+  DATASET_SCHEMA_CHANGE_ORDINAL_DOMAIN: 1,
+
+  DATASET_REQUEST: 1,
+  DATASET_RECEIVE: 1,
+
+  ...RESULT_ACTION_TYPE_INDEX,
+
+  FILTER_ADD: 1,
+  FILTER_CLEAR: 1,
+  FILTER_MODIFY_EXTENT: 1,
+  FILTER_MODIFY_MAX_BOUND: 1,
+  FILTER_MODIFY_MIN_BOUND: 1,
+  FILTER_MODIFY_TIME_UNIT: 1,
+  FILTER_MODIFY_ONE_OF: 1,
+  FILTER_REMOVE: 1,
+  FILTER_TOGGLE: 1,
+
+  SHELF_LOAD_QUERY: 1,
+  SHELF_AUTO_ADD_COUNT_CHANGE: 1,
+  SHELF_GROUP_BY_CHANGE: 1,
+
+  ...SPEC_ACTION_TYPE_INDEX
 };
 
-const singleViewTabReducerBase = makeResetReducer(
+export function isSingleViewTabAction(action: Action): action is SingleViewTabAction {
+  return SINGLE_VIEW_TAB_ACTION_TYPE_INDEX[action.type];
+}
+
+const undoableReducerBase = (state: Readonly<UndoableStateBase> = DEFAULT_UNDOABLE_STATE_BASE, action: Action)
+: UndoableStateBase => {
+  // multi-tab actions
+  switch (action.type) {
+    case TAB_ADD:
+      return {
+        ...state,
+        tabs: [...state.tabs, DEFAULT_SINGLE_VIEW_TAB_STATE],
+        activeTab: state.activeTab + 1,
+      };
+    // case TAB_REMOVE:
+    //   return {
+
+    //   };
+    case TAB_SWITCH:
+      return {
+        ...state,
+        activeTab: action.payload.switchToTab
+      };
+  }
+
+  // single-tab actions
+  if (isSingleViewTabAction(action)) {
+    return {
+      ...state,
+      tabs: modifyItemInArray(state.tabs, 0, // action.payload.tabID
+        (singleViewTabState: SingleViewTabState) => singleViewTabReducer(singleViewTabState, action))
+    };
+  }
+
+  return state;
+};
+
+const singleViewTabReducer = makeResetReducer(
   (state: Readonly<SingleViewTabState> = DEFAULT_SINGLE_VIEW_TAB_STATE, action: Action): SingleViewTabState => {
     switch (action.type) {
       // SPEC_FIELD_AUTO_ADD is a special case that requires schema as a parameter
