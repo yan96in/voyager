@@ -13,15 +13,15 @@ import {Dataset} from '../models/dataset';
 
 export const selectData = (state: State): InlineData => {
   const activeTab = state.undoable.present.activeTab;
-  return state.undoable.present.tabs[activeTab].dataset.data;
+  return state.undoable.present.dataset.data;
 };
 export const selectDataset = (state: State): Dataset => {
   const activeTab = state.undoable.present.activeTab;
-  return state.undoable.present.tabs[activeTab].dataset;
+  return state.undoable.present.dataset;
 };
 export const selectSchema = (state: State): Schema => {
   const activeTab = state.undoable.present.activeTab;
-  return state.undoable.present.tabs[activeTab].dataset.schema;
+  return state.undoable.present.dataset.schema;
 };
 
 

@@ -1,4 +1,5 @@
 import {Schema} from 'compassql/build/src/schema';
+import {DEFAULT_CUSTOM_WILDCARD_FIELDS} from '../models/custom-wildcard-field';
 import {DEFAULT_PERSISTENT_STATE, DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_STATE, State} from '../models/index';
 import {DEFAULT_SHELF, toQuery} from '../models/shelf/index';
 import {hasWildcards} from '../models/shelf/spec';
@@ -15,19 +16,20 @@ describe('selectors/shelf', () => {
         undoable: {
           ...DEFAULT_STATE.undoable,
           present: {
+            dataset: {
+              data: {
+                values: []
+              },
+              isLoading: false,
+              name: 'Test',
+              schema: new Schema({
+                fields: []
+              }),
+            },
+            customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
             activeTab: 0,
             tabs: [{
               ...DEFAULT_SINGLE_VIEW_TAB_STATE,
-              dataset: {
-                data: {
-                  values: []
-                },
-                isLoading: false,
-                name: 'Test',
-                schema: new Schema({
-                  fields: []
-                }),
-              },
               shelf: {
                 ...DEFAULT_SHELF,
                 filters

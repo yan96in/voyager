@@ -4,6 +4,7 @@ import {ExpandedType} from 'compassql/build/src/query/expandedtype';
 import {SpecQuery} from 'compassql/build/src/query/spec';
 import {Schema} from 'compassql/build/src/schema';
 import {Data} from 'vega-lite/build/src/data';
+import {DEFAULT_CUSTOM_WILDCARD_FIELDS} from '../models/custom-wildcard-field';
 import {DEFAULT_DATASET} from '../models/dataset';
 import {DEFAULT_PERSISTENT_STATE, DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_STATE, State} from '../models/index';
 import {fromSpecQueryModelGroup} from '../models/result';
@@ -47,13 +48,14 @@ const stateSpecific: State = {
   undoable: {
     ...DEFAULT_STATE.undoable,
     present: {
+      dataset: {
+        ...DEFAULT_DATASET,
+        data
+      },
+      customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
       activeTab: 0,
       tabs: [{
         ...DEFAULT_SINGLE_VIEW_TAB_STATE,
-        dataset: {
-          ...DEFAULT_DATASET,
-          data
-        },
         shelf: {
           ...DEFAULT_SHELF,
           spec

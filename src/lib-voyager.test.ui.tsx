@@ -122,7 +122,7 @@ describe('lib-voyager', () => {
 
           const handleStateChange = (state: SerializableState) => {
             expect(state.config).toBeDefined();
-            expect(state.tabs[0].dataset).toBeDefined();
+            expect(state.dataset).toBeDefined();
             expect(state.tabs[0].result).toBeDefined();
             expect(state.tabs[0].shelf).toBeDefined();
 

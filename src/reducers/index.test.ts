@@ -47,14 +47,14 @@ describe('reducers/index', () => {
           ...DEFAULT_UNDOABLE_STATE,
           present: {
             ...DEFAULT_UNDOABLE_STATE_BASE,
+            dataset: {
+              isLoading: false,
+              name: 'Mock',
+              schema: null,
+              data: null
+            },
+            customWildcardFields: [{fields: ['test']}],
             tabs: [{
-              dataset: {
-                isLoading: false,
-                name: 'Mock',
-                schema: null,
-                data: null
-              },
-              customWildcardFields: [{fields: ['test']}],
               shelf: {
                 ...DEFAULT_SHELF,
                 spec: {

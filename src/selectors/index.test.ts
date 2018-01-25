@@ -1,6 +1,7 @@
 
 import {DEFAULT_BOOKMARK} from '../models/bookmark';
 import {DEFAULT_VOYAGER_CONFIG} from '../models/config';
+import {DEFAULT_CUSTOM_WILDCARD_FIELDS} from '../models/custom-wildcard-field';
 import {DEFAULT_DATASET} from '../models/dataset';
 import {DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_STATE, State} from '../models/index';
 import {DEFAULT_LOG} from '../models/log';
@@ -40,15 +41,16 @@ describe('selectors/index', () => {
         undoable: {
           ...DEFAULT_STATE.undoable,
           present: {
+            dataset: {
+              ...DEFAULT_DATASET,
+              data: {
+                values: [{a: 1}, {a: 3}]
+              }
+            },
+            customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
             activeTab: 0,
             tabs: [{
               ...DEFAULT_SINGLE_VIEW_TAB_STATE,
-              dataset: {
-                ...DEFAULT_DATASET,
-                data: {
-                  values: [{a: 1}, {a: 3}]
-                }
-              },
               shelf: {
                 ...DEFAULT_SHELF,
                 filters: [{field: 'a', oneOf: [3]}]
@@ -71,13 +73,14 @@ describe('selectors/index', () => {
         undoable: {
           ...DEFAULT_STATE.undoable,
           present: {
+            dataset: {
+              ...DEFAULT_DATASET,
+              data
+            },
+            customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
             activeTab: 0,
             tabs: [{
-              ...DEFAULT_SINGLE_VIEW_TAB_STATE,
-              dataset: {
-                ...DEFAULT_DATASET,
-                data
-              }
+              ...DEFAULT_SINGLE_VIEW_TAB_STATE
             }]
           },
         }
