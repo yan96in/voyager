@@ -12,8 +12,8 @@ import {getDefaultGroupBy, Shelf, ShelfGroupBy, toQuery} from '../models/shelf/i
 import {hasWildcards, ShelfUnitSpec} from '../models/shelf/spec';
 
 export const selectShelf = (state: State): Shelf => {
-  const activeTab = state.undoable.present.activeTab;
-  return state.undoable.present.tabs[activeTab].shelf;
+  const activeTab = state.undoable.present.tabs.activeTab;
+  return state.undoable.present.tabs.list[activeTab].shelf;
 };
 
 export const selectShelfGroupBy = createSelector(selectShelf,

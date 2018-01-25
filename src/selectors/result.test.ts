@@ -53,21 +53,23 @@ const stateSpecific: State = {
         data
       },
       customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
-      activeTab: 0,
-      tabs: [{
-        ...DEFAULT_SINGLE_VIEW_TAB_STATE,
-        shelf: {
-          ...DEFAULT_SHELF,
-          spec
-        },
-        result: {
-          ...DEFAULT_RESULT_INDEX,
-          main: {
-            ...DEFAULT_RESULT,
-            plots
+      tabs: {
+        activeTab: 0,
+        list: [{
+          ...DEFAULT_SINGLE_VIEW_TAB_STATE,
+          shelf: {
+            ...DEFAULT_SHELF,
+            spec
+          },
+          result: {
+            ...DEFAULT_RESULT_INDEX,
+            main: {
+              ...DEFAULT_RESULT,
+              plots
+            }
           }
-        }
-      }]
+        }]
+      }
     }
   }
 };

@@ -48,14 +48,16 @@ describe('selectors/index', () => {
               }
             },
             customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
-            activeTab: 0,
-            tabs: [{
-              ...DEFAULT_SINGLE_VIEW_TAB_STATE,
-              shelf: {
-                ...DEFAULT_SHELF,
-                filters: [{field: 'a', oneOf: [3]}]
-              }
-            }]
+            tabs: {
+              activeTab: 0,
+              list: [{
+                ...DEFAULT_SINGLE_VIEW_TAB_STATE,
+                shelf: {
+                  ...DEFAULT_SHELF,
+                  filters: [{field: 'a', oneOf: [3]}]
+                }
+              }]
+            }
           },
         }
       };
@@ -78,10 +80,12 @@ describe('selectors/index', () => {
               data
             },
             customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
-            activeTab: 0,
-            tabs: [{
-              ...DEFAULT_SINGLE_VIEW_TAB_STATE
-            }]
+            tabs: {
+              activeTab: 0,
+              list: [{
+                ...DEFAULT_SINGLE_VIEW_TAB_STATE
+              }]
+            }
           },
         }
       };

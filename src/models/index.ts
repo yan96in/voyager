@@ -32,10 +32,14 @@ export interface SingleViewTabState {
   result: ResultIndex;
 }
 
+export interface Tabs {
+  activeTab: number;
+  list: SingleViewTabState[];
+}
+
 export interface UndoableStateBaseWithoutDataset {
   customWildcardFields: CustomWildcardField[];
-  activeTab: number;
-  tabs: SingleViewTabState[];
+  tabs: Tabs;
 }
 
 export interface UndoableStateBase extends UndoableStateBaseWithoutDataset {
@@ -58,8 +62,7 @@ export const DEFAULT_SINGLE_VIEW_TAB_STATE = {
 export const DEFAULT_UNDOABLE_STATE_BASE: UndoableStateBase = {
   dataset: DEFAULT_DATASET,
   customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
-  activeTab: 0,
-  tabs: [DEFAULT_SINGLE_VIEW_TAB_STATE]
+  tabs: {activeTab: 0, list: [DEFAULT_SINGLE_VIEW_TAB_STATE]}
 };
 
 export const DEFAULT_UNDOABLE_STATE: StateWithHistory<UndoableStateBase> = {
@@ -111,7 +114,6 @@ export function fromSerializable(serializable: SerializableState): Readonly<Stat
     relatedViews,
     shelfPreview,
     // Undoable
-    activeTab,
     tabs,
     dataset: datasetWithoutSchema,
     tableschema,
@@ -119,7 +121,7 @@ export function fromSerializable(serializable: SerializableState): Readonly<Stat
   } = serializable;
 
   const persistent: PersistentState = {bookmark, config, relatedViews, shelfPreview, log};
-  const undoableWithoutDataset: UndoableStateBaseWithoutDataset = {customWildcardFields, activeTab, tabs};
+  const undoableWithoutDataset: UndoableStateBaseWithoutDataset = {customWildcardFields, tabs};
 
   return {
     persistent,

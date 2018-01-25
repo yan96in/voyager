@@ -27,14 +27,16 @@ describe('selectors/shelf', () => {
               }),
             },
             customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
-            activeTab: 0,
-            tabs: [{
-              ...DEFAULT_SINGLE_VIEW_TAB_STATE,
-              shelf: {
-                ...DEFAULT_SHELF,
-                filters
-              }
-            }]
+            tabs: {
+              activeTab: 0,
+              list: [{
+                ...DEFAULT_SINGLE_VIEW_TAB_STATE,
+                shelf: {
+                  ...DEFAULT_SHELF,
+                  filters
+                }
+              }]
+            }
           }
         }
       };

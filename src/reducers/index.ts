@@ -245,10 +245,7 @@ function groupAction(action: Action, currentState: UndoableStateBase,
 const undoableStateToReset: ResetIndex<UndoableStateBase> = {
   customWildcardFields: true,
   dataset: true,
-  activeTab: true,
   tabs: true
-  // shelf: true,
-  // result: true
 };
 
 const combineSingleViewTabReducer = combineReducers<SingleViewTabState>({
@@ -308,39 +305,6 @@ export function isSingleViewTabAction(action: Action): action is SingleViewTabAc
   return SINGLE_VIEW_TAB_ACTION_TYPE_INDEX[action.type];
 }
 
-// const undoableReducerBase = (state: Readonly<UndoableStateBase> = DEFAULT_UNDOABLE_STATE_BASE, action: Action)
-// : UndoableStateBase => {
-//   // multi-tab actions
-//   switch (action.type) {
-//     case TAB_ADD:
-//       return {
-//         ...state,
-//         tabs: [...state.tabs, DEFAULT_SINGLE_VIEW_TAB_STATE],
-//         activeTab: state.activeTab + 1,
-//       };
-//     // case TAB_REMOVE:
-//     //   return {
-
-//     //   };
-//     case TAB_SWITCH:
-//       return {
-//         ...state,
-//         activeTab: action.payload.switchToTab
-//       };
-//   }
-
-//   // single-tab actions
-//   if (isSingleViewTabAction(action)) {
-//     return {
-//       ...state,
-//       tabs: modifyItemInArray(state.tabs, 0, // action.payload.tabID
-//         (singleViewTabState: SingleViewTabState) => singleViewTabReducer(singleViewTabState, action))
-//     };
-//   }
-
-//   return state;
-// };
-
 const undoableReducerBase = makeResetReducer(
   (state: Readonly<UndoableStateBase> = DEFAULT_UNDOABLE_STATE_BASE, action: Action): UndoableStateBase => {
     // multi-tab actions
@@ -348,8 +312,10 @@ const undoableReducerBase = makeResetReducer(
       case TAB_ADD:
         return {
           ...state,
-          tabs: [...state.tabs, DEFAULT_SINGLE_VIEW_TAB_STATE],
-          activeTab: state.activeTab + 1,
+          tabs: {
+            activeTab: state.tabs.activeTab + 1,
+            list: [...state.tabs.list, DEFAULT_SINGLE_VIEW_TAB_STATE]
+          },
         };
       // case TAB_REMOVE:
       //   return {
@@ -358,7 +324,10 @@ const undoableReducerBase = makeResetReducer(
       case TAB_SWITCH:
         return {
           ...state,
-          activeTab: action.payload.switchToTab
+          tabs: {
+            ...state.tabs,
+            activeTab: action.payload.switchToTab
+          }
         };
     }
 
@@ -368,24 +337,30 @@ const undoableReducerBase = makeResetReducer(
       if (action.type === SPEC_FIELD_AUTO_ADD) {
         return {
           ...state,
-          tabs: modifyItemInArray(state.tabs, 0, // action.payload.tabID
-            (singleViewTabState: SingleViewTabState) => {
-              return {
-                ...singleViewTabState,
-                shelf: {
-                  ...singleViewTabState.shelf,
-                  spec: shelfSpecFieldAutoAddReducer(singleViewTabState.shelf.spec, action, state.dataset.schema)
-                }
-              };
-            }
-          )
+          tabs: {
+            ...state.tabs,
+            list: modifyItemInArray(state.tabs.list, 0, // action.payload.tabID
+              (singleViewTabState: SingleViewTabState) => {
+                return {
+                  ...singleViewTabState,
+                  shelf: {
+                    ...singleViewTabState.shelf,
+                    spec: shelfSpecFieldAutoAddReducer(singleViewTabState.shelf.spec, action, state.dataset.schema)
+                  }
+                };
+              }
+            )
+          }
         };
       }
 
       return {
         ...state,
-        tabs: modifyItemInArray(state.tabs, 0, // action.payload.tabID
-          (singleViewTabState: SingleViewTabState) => combineSingleViewTabReducer(singleViewTabState, action))
+        tabs: {
+          ...state.tabs,
+          list: modifyItemInArray(state.tabs.list, 0, // action.payload.tabID
+            (singleViewTabState: SingleViewTabState) => combineSingleViewTabReducer(singleViewTabState, action))
+        }
       };
     }
 
