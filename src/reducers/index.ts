@@ -249,13 +249,6 @@ const undoableStateToReset: ResetIndex<UndoableStateBase> = {
   tabs: true
 };
 
-// const undoableReducerBase = makeResetReducer(
-//   (state: Readonly<UndoableStateBase> = DEFAULT_UNDOABLE_STATE_BASE, action: Action): UndoableStateBase => {
-//   },
-//   undoableStateToReset,
-//   DEFAULT_UNDOABLE_STATE_BASE
-// );
-
 const undoableReducerCombined = combineReducers<UndoableStateBase>({
   dataset: datasetReducer,
   customWildcardFields: customWildcardFieldReducer,
@@ -270,7 +263,8 @@ const undoableReducerBase = makeResetReducer(
         ...state,
         tabs: {
           ...state.tabs,
-          list: modifyItemInArray(state.tabs.list, 0, // action.payload.tabID
+          list: modifyItemInArray(state.tabs.list,
+            state.tabs.activeTabID, // Question: Is this ok? Must I use action.payload.tabID?
             (singleViewTabState: SingleViewTabState) => {
               return {
                 ...singleViewTabState,

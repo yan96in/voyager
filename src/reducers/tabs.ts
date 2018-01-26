@@ -22,18 +22,6 @@ export type SingleViewTabAction = (
 export type SingleViewTabActionType = SingleViewTabAction['type'];
 
 export const SINGLE_VIEW_TAB_ACTION_TYPE_INDEX: {[k in SingleViewTabActionType]: 1} = {
-  // CUSTOM_WILDCARD_ADD: 1,
-  // CUSTOM_WILDCARD_ADD_FIELD: 1,
-  // CUSTOM_WILDCARD_MODIFY_DESCRIPTION: 1,
-  // CUSTOM_WILDCARD_REMOVE: 1,
-  // CUSTOM_WILDCARD_REMOVE_FIELD: 1,
-
-  // DATASET_SCHEMA_CHANGE_FIELD_TYPE: 1,
-  // DATASET_SCHEMA_CHANGE_ORDINAL_DOMAIN: 1,
-
-  // DATASET_REQUEST: 1,
-  // DATASET_RECEIVE: 1,
-
   ...RESULT_ACTION_TYPE_INDEX,
 
   FILTER_ADD: 1,
@@ -82,10 +70,9 @@ export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action)
 
   // single-tab actions
   if (isSingleViewTabAction(action)) {
-    console.log('single tab action: ', action);
     return {
       ...tabs,
-      list: modifyItemInArray(tabs.list, action.payload.tabID, // action.payload.tabID
+      list: modifyItemInArray(tabs.list, tabs.activeTabID, // Question: Is this ok? Must I use action.payload.tabID?
         (singleViewTabState: SingleViewTabState) => combineSingleViewTabReducer(singleViewTabState, action))
     };
   }
