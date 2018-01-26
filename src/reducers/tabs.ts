@@ -52,11 +52,11 @@ const combineSingleViewTabReducer = combineReducers<SingleViewTabState>({
 
 export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action): Tabs {
   // multi-tab actions
-  const {activeTabID, list} = tabs;
+  const {list} = tabs;
   switch (action.type) {
     case TAB_ADD:
       return {
-        activeTabID: activeTabID + 1,
+        activeTabID: list.length,
         list: [...list, DEFAULT_SINGLE_VIEW_TAB_STATE]
       };
     case TAB_REMOVE:
