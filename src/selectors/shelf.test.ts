@@ -1,6 +1,7 @@
 import {Schema} from 'compassql/build/src/schema';
 import {DEFAULT_CUSTOM_WILDCARD_FIELDS} from '../models/custom-wildcard-field';
-import {DEFAULT_PERSISTENT_STATE, DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_STATE, State} from '../models/index';
+import {DEFAULT_ACTIVE_TAB, DEFAULT_PERSISTENT_STATE, DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_STATE,
+  State} from '../models/index';
 import {DEFAULT_SHELF, toQuery} from '../models/shelf/index';
 import {hasWildcards} from '../models/shelf/spec';
 import {toSpecQuery} from '../models/shelf/spec/index';
@@ -45,27 +46,29 @@ describe('selectors/shelf', () => {
     });
   });
 
+  const defaultShelf = DEFAULT_STATE.undoable.present.tabs.list[DEFAULT_ACTIVE_TAB].shelf;
+
   describe('selectShelfGroupBy', () => {
     it('selecting shelf should return the default shelf', () => {
-      expect(selectShelfGroupBy(DEFAULT_STATE)).toBe(DEFAULT_STATE.undoable.present.tabs[0].shelf.groupBy);
+      expect(selectShelfGroupBy(DEFAULT_STATE)).toBe(defaultShelf.groupBy);
     });
   });
 
   describe('selectQuery', () => {
     it('selecting query should return the query constructed with default shelf', () => {
-      expect(selectQuery(DEFAULT_STATE)).toEqual(toQuery(DEFAULT_STATE.undoable.present.tabs[0].shelf));
+      expect(selectQuery(DEFAULT_STATE)).toEqual(toQuery(defaultShelf));
     });
   });
 
   describe('selectQuerySpec', () => {
     it('selecting query spec should return the default query spec', () => {
-      expect(selectQuerySpec(DEFAULT_STATE)).toEqual(toQuery(DEFAULT_STATE.undoable.present.tabs[0].shelf).spec);
+      expect(selectQuerySpec(DEFAULT_STATE)).toEqual(toQuery(defaultShelf).spec);
     });
   });
 
   describe('selectIsQuerySpecific', () => {
     it('selecting isQuerySpecific should return whether the default query is specific', () => {
-      const specQ = toSpecQuery(DEFAULT_STATE.undoable.present.tabs[0].shelf.spec);
+      const specQ = toSpecQuery(defaultShelf.spec);
       expect(selectIsQuerySpecific(DEFAULT_STATE)).toEqual(
         !hasWildcards(specQ).hasAnyWildcard
       );
