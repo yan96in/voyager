@@ -17,7 +17,7 @@ export const selectResult: {
   [k in ResultType]?: Selector<State, Result>
 } = RESULT_TYPES.reduce((selectors, resultType) => {
   selectors[resultType] = (state: State) => {
-    const activeTab = state.undoable.present.tabs.activeTab;
+    const activeTab = state.undoable.present.tabs.activeTabID;
     return state.undoable.present.tabs.list[activeTab].result[resultType];
   };
   return selectors;

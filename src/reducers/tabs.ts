@@ -64,11 +64,11 @@ const combineSingleViewTabReducer = combineReducers<SingleViewTabState>({
 
 export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action): Tabs {
   // multi-tab actions
-  const {activeTab, list} = tabs;
+  const {activeTabID, list} = tabs;
   switch (action.type) {
     case TAB_ADD:
       return {
-        activeTab: activeTab + 1,
+        activeTabID: activeTabID + 1,
         list: [...list, DEFAULT_SINGLE_VIEW_TAB_STATE]
       };
     case TAB_REMOVE:
@@ -76,15 +76,16 @@ export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action)
     case TAB_SWITCH:
       return {
         ...tabs,
-        activeTab: action.payload.switchToTab
+        activeTabID: action.payload.switchToTab
       };
   }
 
   // single-tab actions
   if (isSingleViewTabAction(action)) {
+    console.log('single tab action: ', action);
     return {
       ...tabs,
-      list: modifyItemInArray(tabs.list, 0, // action.payload.tabID
+      list: modifyItemInArray(tabs.list, action.payload.tabID, // action.payload.tabID
         (singleViewTabState: SingleViewTabState) => combineSingleViewTabReducer(singleViewTabState, action))
     };
   }

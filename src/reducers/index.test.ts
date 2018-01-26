@@ -57,7 +57,7 @@ describe('reducers/index', () => {
             },
             customWildcardFields: [{fields: ['test']}],
             tabs: {
-              activeTab: DEFAULT_ACTIVE_TAB,
+              activeTabID: DEFAULT_ACTIVE_TAB,
               list: [{
                 shelf: {
                   ...DEFAULT_SHELF,

@@ -49,7 +49,7 @@ describe('selectors/index', () => {
             },
             customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
             tabs: {
-              activeTab: 0,
+              activeTabID: 0,
               list: [{
                 ...DEFAULT_SINGLE_VIEW_TAB_STATE,
                 shelf: {
@@ -81,7 +81,7 @@ describe('selectors/index', () => {
             },
             customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
             tabs: {
-              activeTab: 0,
+              activeTabID: 0,
               list: [{
                 ...DEFAULT_SINGLE_VIEW_TAB_STATE
               }]

@@ -30,6 +30,7 @@ export const selectLog = (state: State): Log => state.persistent.log;
 export const selectCustomWildcardFields = (state: State): CustomWildcardField[] =>
  state.undoable.present.customWildcardFields;
 export const selectTabs = (state: State): Tabs => state.undoable.present.tabs;
+export const selectActiveTabID = (state: State): number => state.undoable.present.tabs.activeTabID;
 
 export const selectFilteredData = createSelector(
   selectData,

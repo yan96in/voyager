@@ -12,7 +12,7 @@ export const DEFAULT_SINGLE_VIEW_TAB_STATE = {
 };
 
 export interface Tabs {
-  activeTab: number;
+  activeTabID: number;
   list: SingleViewTabState[];
 }
 

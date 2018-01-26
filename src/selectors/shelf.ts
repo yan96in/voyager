@@ -12,7 +12,7 @@ import {getDefaultGroupBy, Shelf, ShelfGroupBy, toQuery} from '../models/shelf/i
 import {hasWildcards, ShelfUnitSpec} from '../models/shelf/spec';
 
 export const selectShelf = (state: State): Shelf => {
-  const activeTab = state.undoable.present.tabs.activeTab;
+  const activeTab = state.undoable.present.tabs.activeTabID;
   return state.undoable.present.tabs.list[activeTab].shelf;
 };
 
