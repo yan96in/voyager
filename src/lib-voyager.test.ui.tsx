@@ -4,7 +4,7 @@
 
 import * as ReactDOM from 'react-dom';
 import {CreateVoyager} from './lib-voyager';
-import {DEFAULT_ACTIVE_TAB, SerializableState} from './models/index';
+import {DEFAULT_ACTIVE_TAB_ID, SerializableState} from './models/index';
 
 const DEFAULT_TIMEOUT_LENGTH = 300;
 
@@ -81,8 +81,8 @@ describe('lib-voyager', () => {
           expect(state).toHaveProperty('dataset');
           expect(state.customWildcardFields).toBeDefined();
           expect(state.tabs.activeTabID).toBeDefined();
-          expect(state.tabs.list[DEFAULT_ACTIVE_TAB]).toHaveProperty('result');
-          expect(state.tabs.list[DEFAULT_ACTIVE_TAB]).toHaveProperty('shelf');
+          expect(state.tabs.list[DEFAULT_ACTIVE_TAB_ID]).toHaveProperty('result');
+          expect(state.tabs.list[DEFAULT_ACTIVE_TAB_ID]).toHaveProperty('shelf');
 
           const originalConfigOption = state.config.showDataSourceSelector;
           state.config.showDataSourceSelector = !state.config.showDataSourceSelector;
@@ -97,8 +97,8 @@ describe('lib-voyager', () => {
               expect(newState).toHaveProperty('dataset');
               expect(state.customWildcardFields).toBeDefined();
               expect(state.tabs.activeTabID).toBeDefined();
-              expect(newState.tabs.list[DEFAULT_ACTIVE_TAB]).toHaveProperty('result');
-              expect(newState.tabs.list[DEFAULT_ACTIVE_TAB]).toHaveProperty('shelf');
+              expect(newState.tabs.list[DEFAULT_ACTIVE_TAB_ID]).toHaveProperty('result');
+              expect(newState.tabs.list[DEFAULT_ACTIVE_TAB_ID]).toHaveProperty('shelf');
 
               expect(newState.config.showDataSourceSelector).toEqual(!originalConfigOption);
 
@@ -129,8 +129,8 @@ describe('lib-voyager', () => {
             expect(state.dataset).toBeDefined();
             expect(state.customWildcardFields).toBeDefined();
             expect(state.tabs.activeTabID).toBeDefined();
-            expect(state.tabs.list[DEFAULT_ACTIVE_TAB].result).toBeDefined();
-            expect(state.tabs.list[DEFAULT_ACTIVE_TAB].shelf).toBeDefined();
+            expect(state.tabs.list[DEFAULT_ACTIVE_TAB_ID].result).toBeDefined();
+            expect(state.tabs.list[DEFAULT_ACTIVE_TAB_ID].shelf).toBeDefined();
 
             expect(state.config.showDataSourceSelector).toEqual(!originalConfigOption);
 

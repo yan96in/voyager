@@ -1,6 +1,6 @@
 import {Schema} from 'compassql/build/src/schema';
 import {DEFAULT_CUSTOM_WILDCARD_FIELDS} from '../models/custom-wildcard-field';
-import {DEFAULT_ACTIVE_TAB, DEFAULT_PERSISTENT_STATE, DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_STATE,
+import {DEFAULT_ACTIVE_TAB_ID, DEFAULT_PERSISTENT_STATE, DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_STATE,
   State} from '../models/index';
 import {DEFAULT_SHELF, toQuery} from '../models/shelf/index';
 import {hasWildcards} from '../models/shelf/spec';
@@ -46,7 +46,7 @@ describe('selectors/shelf', () => {
     });
   });
 
-  const defaultShelf = DEFAULT_STATE.undoable.present.tabs.list[DEFAULT_ACTIVE_TAB].shelf;
+  const defaultShelf = DEFAULT_STATE.undoable.present.tabs.list[DEFAULT_ACTIVE_TAB_ID].shelf;
 
   describe('selectShelfGroupBy', () => {
     it('selecting shelf should return the default shelf', () => {

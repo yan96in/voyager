@@ -16,9 +16,9 @@ export interface Tabs {
   list: SingleViewTabState[];
 }
 
-export const DEFAULT_ACTIVE_TAB = 0;
+export const DEFAULT_ACTIVE_TAB_ID = 0;
 
 export const DEFAULT_TABS = {
-  activeTab: DEFAULT_ACTIVE_TAB,
+  activeTabID: DEFAULT_ACTIVE_TAB_ID,
   list: [DEFAULT_SINGLE_VIEW_TAB_STATE]
 };

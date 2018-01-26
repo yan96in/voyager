@@ -5,7 +5,7 @@ import {Bookmark, DEFAULT_BOOKMARK} from '../models/bookmark';
 import {DEFAULT_CUSTOM_WILDCARD_FIELDS} from '../models/custom-wildcard-field';
 import {DEFAULT_DATASET} from '../models/dataset';
 import {
-  DEFAULT_ACTIVE_TAB,
+  DEFAULT_ACTIVE_TAB_ID,
   DEFAULT_PERSISTENT_STATE,
   DEFAULT_STATE,
   DEFAULT_TABS,
@@ -57,7 +57,7 @@ describe('reducers/index', () => {
             },
             customWildcardFields: [{fields: ['test']}],
             tabs: {
-              activeTabID: DEFAULT_ACTIVE_TAB,
+              activeTabID: DEFAULT_ACTIVE_TAB_ID,
               list: [{
                 shelf: {
                   ...DEFAULT_SHELF,
