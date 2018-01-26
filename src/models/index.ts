@@ -6,15 +6,15 @@ import {CustomWildcardField, DEFAULT_CUSTOM_WILDCARD_FIELDS} from './custom-wild
 import {Dataset, DatasetWithoutSchema, DEFAULT_DATASET} from './dataset';
 import {DEFAULT_LOG, Log} from './log';
 import {DEFAULT_RELATED_VIEWS, RelatedViews} from './related-views';
-import {DEFAULT_RESULT_INDEX, ResultIndex} from './result';
-import {DEFAULT_SHELF, Shelf} from './shelf';
 import {DEFAULT_SHELF_PREVIEW, ShelfPreview} from './shelf-preview';
+import {DEFAULT_TABS, Tabs} from './tabs';
 
 export * from './bookmark';
 export * from './dataset';
 export * from './shelf';
 export * from './result';
 export * from './config';
+export * from './tabs';
 
 /**
  * Application state.
@@ -25,16 +25,6 @@ export interface PersistentState {
   log: Log;
   relatedViews: RelatedViews;
   shelfPreview: ShelfPreview;
-}
-
-export interface SingleViewTabState {
-  shelf: Shelf;
-  result: ResultIndex;
-}
-
-export interface Tabs {
-  activeTab: number;
-  list: SingleViewTabState[];
 }
 
 export interface UndoableStateBaseWithoutDataset {
@@ -54,15 +44,11 @@ export interface State {
   undoable: StateWithHistory<UndoableStateBase>;
 };
 
-export const DEFAULT_SINGLE_VIEW_TAB_STATE = {
-  shelf: DEFAULT_SHELF,
-  result: DEFAULT_RESULT_INDEX
-};
 
 export const DEFAULT_UNDOABLE_STATE_BASE: UndoableStateBase = {
   dataset: DEFAULT_DATASET,
   customWildcardFields: DEFAULT_CUSTOM_WILDCARD_FIELDS,
-  tabs: {activeTab: 0, list: [DEFAULT_SINGLE_VIEW_TAB_STATE]}
+  tabs: DEFAULT_TABS,
 };
 
 export const DEFAULT_UNDOABLE_STATE: StateWithHistory<UndoableStateBase> = {

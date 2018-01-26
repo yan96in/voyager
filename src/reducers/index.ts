@@ -3,7 +3,7 @@ import {toSet} from 'vega-util';
 
 import {Action, REDO, UNDO} from '../actions';
 import {HISTORY_LIMIT} from '../constants';
-import {DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_STATE, DEFAULT_UNDOABLE_STATE_BASE} from '../models';
+import {DEFAULT_STATE, DEFAULT_UNDOABLE_STATE_BASE, SingleViewTabState} from '../models';
 
 import {SET_CONFIG} from '../actions/config';
 
@@ -67,20 +67,21 @@ import {SPEC_FIELD_NESTED_PROP_CHANGE, SPEC_FIELD_PROP_CHANGE} from '../actions/
 import {
   DEFAULT_PERSISTENT_STATE,
   PersistentState,
-  SingleViewTabState,
   State,
   UndoableStateBase
 } from '../models/index';
 import {bookmarkReducer} from './bookmark';
 import {configReducer} from './config';
+import {customWildcardFieldReducer} from './custom-wildcard-field';
+import {datasetReducer} from './dataset';
 import {logReducer} from './log';
 import {relatedViewsReducer} from './related-views';
 import {makeResetReducer, ResetIndex} from './reset';
-import {resultIndexReducer} from './result';
-import {shelfReducer} from './shelf';
 import {shelfPreviewReducer} from './shelf-preview';
 import {shelfSpecFieldAutoAddReducer} from './shelf/spec';
 import {stateReducer} from './state';
+import {tabsReducer} from './tabs';
+
 import {modifyItemInArray} from './util';
 
 /**
@@ -240,7 +241,7 @@ function groupAction(action: Action, currentState: UndoableStateBase,
 };
 
 /**
- * Whether to reset a particular property of the single view tab state during RESET action
+ * Whether to reset a particular property of the undoable state during RESET action
  */
 const undoableStateToReset: ResetIndex<UndoableStateBase> = {
   customWildcardFields: true,
@@ -248,123 +249,43 @@ const undoableStateToReset: ResetIndex<UndoableStateBase> = {
   tabs: true
 };
 
-const combineSingleViewTabReducer = combineReducers<SingleViewTabState>({
-  // customWildcardFields: customWildcardFieldReducer,
-  // dataset: datasetReducer,
-  shelf: shelfReducer,
-  result: resultIndexReducer
+// const undoableReducerBase = makeResetReducer(
+//   (state: Readonly<UndoableStateBase> = DEFAULT_UNDOABLE_STATE_BASE, action: Action): UndoableStateBase => {
+//   },
+//   undoableStateToReset,
+//   DEFAULT_UNDOABLE_STATE_BASE
+// );
+
+const undoableReducerCombined = combineReducers<UndoableStateBase>({
+  dataset: datasetReducer,
+  customWildcardFields: customWildcardFieldReducer,
+  tabs: tabsReducer,
 });
-
-import {ResultAction, ShelfAction} from '../actions';
-import {RESULT_ACTION_TYPE_INDEX} from '../actions/result';
-import {SPEC_ACTION_TYPE_INDEX} from '../actions/shelf/spec';
-
-// TODO: Remove CustomWildcardAction, DatasetAction from this type
-export type SingleViewTabAction = (
-  // CustomWildcardAction |
-  // DatasetAction |
-  ResultAction |
-  ShelfAction
-);
-
-export type SingleViewTabActionType = SingleViewTabAction['type'];
-
-export const SINGLE_VIEW_TAB_ACTION_TYPE_INDEX: {[k in SingleViewTabActionType]: 1} = {
-  // CUSTOM_WILDCARD_ADD: 1,
-  // CUSTOM_WILDCARD_ADD_FIELD: 1,
-  // CUSTOM_WILDCARD_MODIFY_DESCRIPTION: 1,
-  // CUSTOM_WILDCARD_REMOVE: 1,
-  // CUSTOM_WILDCARD_REMOVE_FIELD: 1,
-
-  // DATASET_SCHEMA_CHANGE_FIELD_TYPE: 1,
-  // DATASET_SCHEMA_CHANGE_ORDINAL_DOMAIN: 1,
-
-  // DATASET_REQUEST: 1,
-  // DATASET_RECEIVE: 1,
-
-  ...RESULT_ACTION_TYPE_INDEX,
-
-  FILTER_ADD: 1,
-  FILTER_CLEAR: 1,
-  FILTER_MODIFY_EXTENT: 1,
-  FILTER_MODIFY_MAX_BOUND: 1,
-  FILTER_MODIFY_MIN_BOUND: 1,
-  FILTER_MODIFY_TIME_UNIT: 1,
-  FILTER_MODIFY_ONE_OF: 1,
-  FILTER_REMOVE: 1,
-  FILTER_TOGGLE: 1,
-
-  SHELF_LOAD_QUERY: 1,
-  SHELF_AUTO_ADD_COUNT_CHANGE: 1,
-  SHELF_GROUP_BY_CHANGE: 1,
-
-  ...SPEC_ACTION_TYPE_INDEX
-};
-
-export function isSingleViewTabAction(action: Action): action is SingleViewTabAction {
-  return SINGLE_VIEW_TAB_ACTION_TYPE_INDEX[action.type];
-}
 
 const undoableReducerBase = makeResetReducer(
   (state: Readonly<UndoableStateBase> = DEFAULT_UNDOABLE_STATE_BASE, action: Action): UndoableStateBase => {
-    // multi-tab actions
-    switch (action.type) {
-      case TAB_ADD:
-        return {
-          ...state,
-          tabs: {
-            activeTab: state.tabs.activeTab + 1,
-            list: [...state.tabs.list, DEFAULT_SINGLE_VIEW_TAB_STATE]
-          },
-        };
-      // case TAB_REMOVE:
-      //   return {
-
-      //   };
-      case TAB_SWITCH:
-        return {
-          ...state,
-          tabs: {
-            ...state.tabs,
-            activeTab: action.payload.switchToTab
-          }
-        };
-    }
-
-    // single-tab actions
-    if (isSingleViewTabAction(action)) {
-      // SPEC_FIELD_AUTO_ADD is a special case that requires schema as a parameter
-      if (action.type === SPEC_FIELD_AUTO_ADD) {
-        return {
-          ...state,
-          tabs: {
-            ...state.tabs,
-            list: modifyItemInArray(state.tabs.list, 0, // action.payload.tabID
-              (singleViewTabState: SingleViewTabState) => {
-                return {
-                  ...singleViewTabState,
-                  shelf: {
-                    ...singleViewTabState.shelf,
-                    spec: shelfSpecFieldAutoAddReducer(singleViewTabState.shelf.spec, action, state.dataset.schema)
-                  }
-                };
-              }
-            )
-          }
-        };
-      }
-
+    // SPEC_FIELD_AUTO_ADD is a special case that requires schema as a parameter
+    if (action.type === SPEC_FIELD_AUTO_ADD) {
       return {
         ...state,
         tabs: {
           ...state.tabs,
           list: modifyItemInArray(state.tabs.list, 0, // action.payload.tabID
-            (singleViewTabState: SingleViewTabState) => combineSingleViewTabReducer(singleViewTabState, action))
+            (singleViewTabState: SingleViewTabState) => {
+              return {
+                ...singleViewTabState,
+                shelf: {
+                  ...singleViewTabState.shelf,
+                  spec: shelfSpecFieldAutoAddReducer(singleViewTabState.shelf.spec, action, state.dataset.schema)
+                }
+              };
+            }
+          )
         }
       };
     }
 
-    return state;
+    return undoableReducerCombined(state, action);
   },
   undoableStateToReset,
   DEFAULT_UNDOABLE_STATE_BASE

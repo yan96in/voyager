@@ -5,6 +5,7 @@ import {Bookmark, DEFAULT_BOOKMARK} from '../models/bookmark';
 import {DEFAULT_CUSTOM_WILDCARD_FIELDS} from '../models/custom-wildcard-field';
 import {DEFAULT_DATASET} from '../models/dataset';
 import {
+  DEFAULT_ACTIVE_TAB,
   DEFAULT_PERSISTENT_STATE,
   DEFAULT_STATE,
   DEFAULT_UNDOABLE_STATE,
@@ -54,24 +55,27 @@ describe('reducers/index', () => {
               data: null
             },
             customWildcardFields: [{fields: ['test']}],
-            tabs: [{
-              shelf: {
-                ...DEFAULT_SHELF,
-                spec: {
-                  mark: 'point',
-                  ...DEFAULT_SHELF_UNIT_SPEC
+            tabs: {
+              activeTab: DEFAULT_ACTIVE_TAB,
+              list: [{
+                shelf: {
+                  ...DEFAULT_SHELF,
+                  spec: {
+                    mark: 'point',
+                    ...DEFAULT_SHELF_UNIT_SPEC
+                  },
                 },
-              },
-              result: {
-                ...DEFAULT_RESULT_INDEX,
-                main: {
-                  isLoading: false,
-                  plots: [], // mock
-                  query: null,
-                  limit: 20
+                result: {
+                  ...DEFAULT_RESULT_INDEX,
+                  main: {
+                    isLoading: false,
+                    plots: [], // mock
+                    query: null,
+                    limit: 20
+                  }
                 }
-              }
-            }]
+              }]
+            }
           }
         }
       };
