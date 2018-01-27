@@ -4,7 +4,7 @@ import {SPEC_ACTION_TYPE_INDEX} from '../actions/shelf/spec';
 import {DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_TABS, SingleViewTabState, Tabs} from '../models';
 import {resultIndexReducer} from './result';
 import {shelfReducer} from './shelf';
-import {modifyItemInArray} from './util';
+import {modifyItemInArray, removeItemFromArray} from './util';
 
 import {
   TAB_ADD,
@@ -56,11 +56,22 @@ export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action)
   switch (action.type) {
     case TAB_ADD:
       return {
-        activeTabID: list.length,
+        activeTabID: list.length, // set the new tab active
         list: [...list, DEFAULT_SINGLE_VIEW_TAB_STATE]
       };
+
     case TAB_REMOVE:
-      return tabs; // TODO: remove a tab
+      const tabToRemove = action.payload.tabToRemove;
+      const length = list.length;
+      if (length <= 1 || tabToRemove > (length - 1)) { // if 0 or 1 tab or error, don't remove tab
+        return tabs;
+      }
+      const newActiveTabID = (tabToRemove === (length - 1)) ? (length - 2) : tabToRemove;
+      return {
+        activeTabID: newActiveTabID,
+        list: removeItemFromArray(tabs.list, action.payload.tabToRemove).array
+      };
+
     case TAB_SWITCH:
       return {
         ...tabs,
