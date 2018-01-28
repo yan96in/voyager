@@ -8,7 +8,7 @@ import {modifyItemInArray, removeItemFromArray} from './util';
 
 import {
   TAB_ADD,
-  TAB_REMOVE,
+  TAB_REMOVE_ACTIVE,
   TAB_SWITCH
 } from '../actions';
 
@@ -52,7 +52,7 @@ const combineSingleViewTabReducer = combineReducers<SingleViewTabState>({
 
 export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action): Tabs {
   // multi-tab actions
-  const {list} = tabs;
+  const {activeTabID, list} = tabs;
   switch (action.type) {
     case TAB_ADD:
       return {
@@ -60,16 +60,15 @@ export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action)
         list: [...list, DEFAULT_SINGLE_VIEW_TAB_STATE]
       };
 
-    case TAB_REMOVE:
-      const tabToRemove = action.payload.tabToRemove;
-      const length = list.length;
-      if (length <= 1 || tabToRemove > (length - 1)) { // if 0 or 1 tab or error, don't remove tab
+    case TAB_REMOVE_ACTIVE:
+      if (list.length === 1) { // if only one tab, don't remove
         return tabs;
       }
-      const newActiveTabID = (tabToRemove === (length - 1)) ? (length - 2) : tabToRemove;
+      // set next tab, or the last tab in the list, active
+      const newActiveTabID = (activeTabID === (list.length - 1)) ? list.length - 2 : activeTabID;
       return {
         activeTabID: newActiveTabID,
-        list: removeItemFromArray(tabs.list, action.payload.tabToRemove).array
+        list: removeItemFromArray(list, activeTabID).array
       };
 
     case TAB_SWITCH:

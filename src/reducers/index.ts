@@ -51,7 +51,7 @@ import {
   SPEC_LOAD,
   SPEC_MARK_CHANGE_TYPE,
   TAB_ADD,
-  TAB_REMOVE,
+  TAB_REMOVE_ACTIVE,
   TAB_SWITCH
 } from '../actions';
 
@@ -206,7 +206,7 @@ export const USER_ACTIONS: ActionType[] = [
 
   // Tab Actions
   TAB_ADD,
-  TAB_REMOVE,
+  TAB_REMOVE_ACTIVE,
   TAB_SWITCH
 ];
 
