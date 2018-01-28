@@ -35,6 +35,15 @@ describe('reducers/tabs', () => {
       const newTabs: Tabs = tabsReducer(oldTabs, {type: TAB_SWITCH, payload: {switchToTab: 1}});
       expect(newTabs.activeTabID).toEqual(1);
     });
+
+    it('should return the old state if the switch to tab is already active', () => {
+      const oldTabs: Tabs = {
+        activeTabID: 2,
+        list: [DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_SINGLE_VIEW_TAB_STATE]
+      };
+      const newTabs: Tabs = tabsReducer(oldTabs, {type: TAB_SWITCH, payload: {switchToTab: 2}});
+      expect(newTabs).toBe(oldTabs);
+    });
   });
 
   describe(TAB_REMOVE_ACTIVE, () => {

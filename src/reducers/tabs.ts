@@ -72,6 +72,9 @@ export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action)
       };
 
     case TAB_SWITCH:
+      if (activeTabID === action.payload.switchToTab) {
+        return tabs;
+      }
       return {
         ...tabs,
         activeTabID: action.payload.switchToTab
