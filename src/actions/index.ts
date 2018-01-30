@@ -107,6 +107,7 @@ export const ACTION_TYPE_INDEX: {[k in ActionType]: 1} = {
   TAB_ADD: 1,
   TAB_REMOVE_ACTIVE: 1,
   TAB_SWITCH: 1,
+  TAB_TITLE_UPDATE: 1,
 
   UNDO: 1,
   REDO: 1,

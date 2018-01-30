@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 import {Action, RESULT_ACTION_TYPE_INDEX, ResultAction, ShelfAction} from '../actions';
 import {SPEC_ACTION_TYPE_INDEX} from '../actions/shelf/spec';
-import {DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_TABS, SingleViewTabState, Tabs} from '../models';
+import {DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_TAB_TITLE, DEFAULT_TABS, SingleViewTabState, Tabs} from '../models';
 import {resultIndexReducer} from './result';
 import {shelfReducer} from './shelf';
 import {modifyItemInArray, removeItemFromArray} from './util';
@@ -9,7 +9,8 @@ import {modifyItemInArray, removeItemFromArray} from './util';
 import {
   TAB_ADD,
   TAB_REMOVE_ACTIVE,
-  TAB_SWITCH
+  TAB_SWITCH,
+  TAB_TITLE_UPDATE
 } from '../actions';
 
 
@@ -46,9 +47,19 @@ export function isSingleViewTabAction(action: Action): action is SingleViewTabAc
 }
 
 const combineSingleViewTabReducer = combineReducers<SingleViewTabState>({
+  title: titleReducer,
   shelf: shelfReducer,
   result: resultIndexReducer
 });
+
+export function titleReducer(oldTitle: Readonly<string> = DEFAULT_TAB_TITLE, action: Action): string {
+  switch (action.type) {
+    case TAB_TITLE_UPDATE:
+      return action.payload.newTitle;
+  }
+
+  return oldTitle;
+}
 
 export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action): Tabs {
   // multi-tab actions
@@ -56,6 +67,7 @@ export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action)
   switch (action.type) {
     case TAB_ADD:
       return {
+        ...tabs,
         activeTabID: list.length, // set the new tab active
         list: [...list, DEFAULT_SINGLE_VIEW_TAB_STATE]
       };
@@ -67,6 +79,7 @@ export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action)
       // set next tab, or the last tab in the list, active
       const newActiveTabID = (activeTabID === (list.length - 1)) ? list.length - 2 : activeTabID;
       return {
+        ...tabs,
         activeTabID: newActiveTabID,
         list: removeItemFromArray(list, activeTabID).array
       };
@@ -85,7 +98,7 @@ export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action)
   if (isSingleViewTabAction(action)) {
     return {
       ...tabs,
-      list: modifyItemInArray(tabs.list, tabs.activeTabID, // Question: Is this ok? Must I use action.payload.tabID?
+      list: modifyItemInArray(tabs.list, tabs.activeTabID,
         (singleViewTabState: SingleViewTabState) => combineSingleViewTabReducer(singleViewTabState, action))
     };
   }

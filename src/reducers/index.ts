@@ -52,7 +52,8 @@ import {
   SPEC_MARK_CHANGE_TYPE,
   TAB_ADD,
   TAB_REMOVE_ACTIVE,
-  TAB_SWITCH
+  TAB_SWITCH,
+  TAB_TITLE_UPDATE
 } from '../actions';
 
 import {ActionType} from '../actions';
@@ -207,7 +208,8 @@ export const USER_ACTIONS: ActionType[] = [
   // Tab Actions
   TAB_ADD,
   TAB_REMOVE_ACTIVE,
-  TAB_SWITCH
+  TAB_SWITCH,
+  TAB_TITLE_UPDATE
 ];
 
 
@@ -264,7 +266,7 @@ const undoableReducerBase = makeResetReducer(
         tabs: {
           ...state.tabs,
           list: modifyItemInArray(state.tabs.list,
-            state.tabs.activeTabID, // Question: Is this ok? Must I use action.payload.tabID?
+            state.tabs.activeTabID,
             (singleViewTabState: SingleViewTabState) => {
               return {
                 ...singleViewTabState,
