@@ -1,23 +1,25 @@
 import {combineReducers} from 'redux';
-import {Action, RESULT_ACTION_TYPE_INDEX, ResultAction, ShelfAction} from '../actions';
+import {Action,
+  RESULT_ACTION_TYPE_INDEX,
+  ResultAction,
+  ShelfAction,
+  TAB_ADD,
+  TAB_REMOVE_ACTIVE,
+  TAB_SWITCH,
+  TAB_TITLE_UPDATE,
+  TabTitleUpdate
+} from '../actions';
 import {SPEC_ACTION_TYPE_INDEX} from '../actions/shelf/spec';
 import {DEFAULT_SINGLE_VIEW_TAB_STATE, DEFAULT_TAB_TITLE, DEFAULT_TABS, SingleViewTabState, Tabs} from '../models';
 import {resultIndexReducer} from './result';
 import {shelfReducer} from './shelf';
 import {modifyItemInArray, removeItemFromArray} from './util';
 
-import {
-  TAB_ADD,
-  TAB_REMOVE_ACTIVE,
-  TAB_SWITCH,
-  TAB_TITLE_UPDATE
-} from '../actions';
-
-
 // TODO: Remove CustomWildcardAction, DatasetAction from this type
 export type SingleViewTabAction = (
   ResultAction |
-  ShelfAction
+  ShelfAction |
+  TabTitleUpdate
 );
 
 export type SingleViewTabActionType = SingleViewTabAction['type'];
@@ -39,7 +41,9 @@ export const SINGLE_VIEW_TAB_ACTION_TYPE_INDEX: {[k in SingleViewTabActionType]:
   SHELF_AUTO_ADD_COUNT_CHANGE: 1,
   SHELF_GROUP_BY_CHANGE: 1,
 
-  ...SPEC_ACTION_TYPE_INDEX
+  ...SPEC_ACTION_TYPE_INDEX,
+
+  TAB_TITLE_UPDATE: 1
 };
 
 export function isSingleViewTabAction(action: Action): action is SingleViewTabAction {
@@ -52,13 +56,13 @@ const combineSingleViewTabReducer = combineReducers<SingleViewTabState>({
   result: resultIndexReducer
 });
 
-export function titleReducer(oldTitle: Readonly<string> = DEFAULT_TAB_TITLE, action: Action): string {
+export function titleReducer(title: Readonly<string> = DEFAULT_TAB_TITLE, action: Action): string {
   switch (action.type) {
     case TAB_TITLE_UPDATE:
       return action.payload.newTitle;
   }
 
-  return oldTitle;
+  return title;
 }
 
 export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action): Tabs {
