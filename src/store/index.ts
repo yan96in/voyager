@@ -28,7 +28,7 @@ if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
 }
 
 export let actionLogs: any;
-export function configureStore(initialState = DEFAULT_STATE) {
+export function configureStore(initialState: State = DEFAULT_STATE): Store<State> {
   actionLogs = createActionLog({limit: null});
 
   const store: Store<State> = createStore<State>(

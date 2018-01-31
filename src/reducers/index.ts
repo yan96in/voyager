@@ -7,8 +7,10 @@ import {DEFAULT_STATE, DEFAULT_UNDOABLE_STATE_BASE, SingleViewTabState} from '..
 
 import {SET_CONFIG} from '../actions/config';
 
-// tslint:disable-next-line:no-unused-variable
+// tslint:disable:no-unused-variable
 import {Action as BaseReduxAction, combineReducers, Reducer} from 'redux';
+import {GenericState} from '../models';
+// tslint:enable:no-unused-variable
 
 import {
   BOOKMARK_ADD_PLOT,
