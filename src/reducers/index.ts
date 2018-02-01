@@ -98,7 +98,7 @@ const persistentStateToReset: ResetIndex<PersistentState> = {
   shelfPreview: true
 };
 
-const persistentReducer = makeResetReducer(
+export const persistentReducer = makeResetReducer(
   combineReducers<PersistentState>({
     bookmark: bookmarkReducer,
     config: configReducer,
