@@ -259,7 +259,7 @@ const undoableReducerCombined = combineReducers<UndoableStateBase>({
   tabs: tabsReducer,
 });
 
-const undoableReducerBase = makeResetReducer(
+export const undoableReducerBase = makeResetReducer(
   (state: Readonly<UndoableStateBase> = DEFAULT_UNDOABLE_STATE_BASE, action: Action): UndoableStateBase => {
     // SPEC_FIELD_AUTO_ADD is a special case that requires schema as a parameter
     if (action.type === SPEC_FIELD_AUTO_ADD) {

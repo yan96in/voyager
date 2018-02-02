@@ -102,7 +102,7 @@ export function tabsReducer(tabs: Readonly<Tabs> = DEFAULT_TABS, action: Action)
   if (isSingleViewTabAction(action)) {
     return {
       ...tabs,
-      list: modifyItemInArray(tabs.list, tabs.activeTabID,
+      list: modifyItemInArray(list, activeTabID,
         (singleViewTabState: SingleViewTabState) => combineSingleViewTabReducer(singleViewTabState, action))
     };
   }
